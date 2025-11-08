@@ -42,8 +42,17 @@ def map_grid(
         output_horizontal_fov = torch.tensor(output_horizontal_fov, device=grid_torch.device).float()
 
         # Calculate vertical field of view for input and output projections
-        output_vertical_fov = output_horizontal_fov  # Assuming square aspect ratio
-        input_vertical_fov = input_horizontal_fov * (grid_torch.shape[0] / grid_torch.shape[1])
+        # For equirectangular, use 2:1 aspect ratio (vertical FOV = horizontal FOV / 2)
+        if output_projection == "EQUIRECTANGULAR":
+            output_vertical_fov = output_horizontal_fov / 2.0
+        else:
+            output_vertical_fov = output_horizontal_fov  # Assuming square aspect ratio for other projections
+
+        # Calculate input vertical FOV based on grid aspect ratio
+        if input_projection == "EQUIRECTANGULAR":
+            input_vertical_fov = input_horizontal_fov / 2.0
+        else:
+            input_vertical_fov = input_horizontal_fov * (grid_torch.shape[0] / grid_torch.shape[1])
 
         # Normalize the grid for vertical FOV adjustment
         normalized_grid = grid_torch.clone()
