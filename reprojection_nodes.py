@@ -231,8 +231,8 @@ class ReprojectImage:
             )
         
         grid_y, grid_x = torch.meshgrid(
-            torch.linspace(-1, 1, output_width, device=image_tensor.device),
             torch.linspace(-1, 1, output_height, device=image_tensor.device),
+            torch.linspace(-1, 1, output_width, device=image_tensor.device),
             indexing="ij"
         )
         grid_init = torch.stack((grid_x, grid_y), dim=-1)
