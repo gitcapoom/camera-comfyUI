@@ -48,13 +48,9 @@ def map_grid(
         else:
             output_vertical_fov = output_horizontal_fov  # Assuming square aspect ratio for other projections
 
-        # Calculate input vertical FOV
-        # For equirectangular, use 2:1 aspect ratio
-        # For other projections, use square aspect (normalized_grid handles output aspect ratio separately)
-        if input_projection == "EQUIRECTANGULAR":
-            input_vertical_fov = input_horizontal_fov / 2.0
-        else:
-            input_vertical_fov = input_horizontal_fov
+        # Calculate input vertical FOV based on output grid aspect ratio
+        # This allows the input's vertical range to adapt to the output dimensions
+        input_vertical_fov = input_horizontal_fov * (grid_torch.shape[0] / grid_torch.shape[1])
 
         # Normalize the grid for vertical FOV adjustment
         normalized_grid = grid_torch.clone()
